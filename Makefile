@@ -1,6 +1,6 @@
 build/GpsSensor: src/main.cpp src/gps.cpp 
 	@mkdir -p build
-	$(CXX) $^ -I include -o $@
+	$(CXX) $^ -I include -lm -o $@
 
 .PHONY: clean
 
