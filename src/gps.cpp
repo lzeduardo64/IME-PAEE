@@ -1,6 +1,10 @@
+/**
+ * @file GpsReader.cpp
+ * @brief Implementação dos métodos da classe GpsReader.
+ */
+
 #include "gps.h"
 #include <cassert>
-#include <cmath>
 #include <cstdio>
 #include <cstring>
 #include <iostream>
