@@ -268,6 +268,7 @@ void GpsReader::parseGPGSV(const std::vector<std::string> &tokens) {
     }
   }
 }
+
 void GpsReader::start() {
   while (!feof(f)) {
     std::string msg = readLine();

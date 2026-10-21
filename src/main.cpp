@@ -20,9 +20,9 @@
  */
 int main(void) {
 #if defined(__arm__) || defined(__aarch64__)
-  std::string gps_path = "/dev/ttyST2";
+  std::string gps_path = "/dev/ttySTM2";
 #else
-  std::string gps_path = "./output.nmea";
+  std::string gps_path = "./gps_log.txt";
 #endif
 
   GpsReader gps(gps_path);
