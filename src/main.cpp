@@ -1,6 +1,14 @@
-#include <iostream>
+#include "gps.h"
 
 int main(void) {
-  std::cout << "Hello World!\n";
+#if defined(__arm__) || defined(__aarch64__)
+  std::string gps_path = "/dev/ttyST2";
+#else
+  std::string gps_path = "./gpslog.txt";
+#endif
+
+  GpsReader gps(gps_path);
+  gps.start();
+
   return 0;
 }
