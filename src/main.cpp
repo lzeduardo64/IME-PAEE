@@ -1,11 +1,16 @@
 /**
  * @file main.cpp
- * @brief Ponto de entrada do programa para leitura e processamento de dados
- * GPS/NMEA.
+ * @brief Ponto de entrada: lê dados GPS/NMEA e os envia a um servidor via UDP.
  * @details Define a fonte de dados GPS de acordo com a arquitetura de
- * compilação (interface serial para sistemas ARM/AArch64 ou arquivo local NMEA
- * para outras plataformas) e executa o processamento contínuo através da classe
- * GpsReader.
+ * compilação (interface serial @c /dev/ttySTM2 em ARM/AArch64, ou o arquivo
+ * local @c ./gps_log.txt nas demais plataformas), lê e interpreta as sentenças
+ * NMEA com GpsReader e, a cada nova posição (sentença GGA), a transmite ao
+ * servidor com GpsNetClient.
+ *
+ * Uso: @code ./programa <ip> <porta> @endcode
+ *
+ * @see GpsReader
+ * @see GpsNetClient
  */
 
 #include "gps.h"
@@ -16,10 +21,28 @@
 /**
  * @brief Função principal do programa.
  *
- * Configura o caminho de entrada apropriado para a plataforma atual, instancia
- * o leitor GPS e inicia o loop de leitura até a conclusão dos dados.
+ * Valida os argumentos, escolhe o caminho de entrada GPS conforme a plataforma,
+ * instancia o leitor GPS e o cliente UDP e entra em um loop infinito que:
+ *  -# lê uma linha NMEA com GpsReader::readLine();
+ *  -# interpreta a sentença com GpsReader::parseLine();
+ *  -# se houver posição nova (GpsReader::dataReady()), obtém-na com
+ *     GpsReader::getData(), envia com GpsNetClient::sendGpsData() e imprime um
+ *     resumo em @c std::cout.
  *
- * @return int Retorna 0 ao finalizar a execução com sucesso.
+ * @param argc Número de argumentos da linha de comando; deve ser 3.
+ * @param argv Argumentos da linha de comando:
+ *             - @c argv[1]: endereço IPv4 do servidor (ex.: "192.168.0.10");
+ *             - @c argv[2]: porta UDP do servidor.
+ *
+ * @return int @c -1 se o número de argumentos for incorreto (após imprimir a
+ *         mensagem de uso). Em operação normal a função não retorna, pois o
+ *         loop principal é infinito; o @c return 0 final é inalcançável.
+ *
+ * @note Com arquivo de log, ao chegar ao fim do arquivo o loop continua
+ *       executando, pois não há teste de EOF (ver GpsReader::start(), que
+ *       trata o EOF, mas não é usado aqui).
+ * @warning A porta é convertida com @c atoi, sem validação: um valor não
+ *          numérico resulta em porta 0.
  */
 int main(int argc, char *argv[]) {
   if (argc != 3) {
