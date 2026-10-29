@@ -6,6 +6,7 @@
 #include "gps.h"
 #include <cassert>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <sstream>
@@ -151,6 +152,11 @@ void GpsReader::parseGPGGA(const std::vector<std::string> &tokens) {
             << " | Lon: " << lon << " | Qualidade: " << quality
             << " | Sats: " << satellites << " | HDOP: " << hdop
             << " | Alt: " << altitude << "m" << std::endl;
+
+  this->lat = lat;
+  this->lon = lon;
+  this->time = atoi(timeUtc.c_str());
+  ready = true;
 }
 
 void GpsReader::parseGPRMC(const std::vector<std::string> &tokens) {
@@ -274,4 +280,19 @@ void GpsReader::start() {
     std::string msg = readLine();
     parseLine(msg);
   }
+}
+
+bool GpsReader::dataReady(void) const { return ready; }
+
+GpsPos GpsReader::getData() {
+  GpsPos data;
+  if (!ready) {
+    data.lat = 0;
+    data.lon = 0;
+    data.t = 0;
+  } else {
+    data = {.lat = this->lat, .lon = this->lon, .t = this->time};
+    ready = false;
+  }
+  return data;
 }

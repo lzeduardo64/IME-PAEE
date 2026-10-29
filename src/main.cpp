@@ -9,6 +9,9 @@
  */
 
 #include "gps.h"
+#include "network.h"
+#include <cstdlib>
+#include <iostream>
 
 /**
  * @brief Função principal do programa.
@@ -18,7 +21,14 @@
  *
  * @return int Retorna 0 ao finalizar a execução com sucesso.
  */
-int main(void) {
+int main(int argc, char *argv[]) {
+  if (argc != 3) {
+    std::cout << "Uso correto: " << argv[0] << " <ip> <porta>\n";
+    return -1;
+  }
+  std::string s_ip = std::string(argv[1]);
+  int s_p = atoi(argv[2]);
+
 #if defined(__arm__) || defined(__aarch64__)
   std::string gps_path = "/dev/ttySTM2";
 #else
@@ -26,7 +36,17 @@ int main(void) {
 #endif
 
   GpsReader gps(gps_path);
-  gps.start();
+  GpsNetClient client(s_ip, s_p);
+  while (1) {
+    std::string nmea = gps.readLine();
+    gps.parseLine(nmea);
+    if (gps.dataReady()) {
+      GpsPos gpsData = gps.getData();
+      client.sendGpsData(gpsData.lat, gpsData.lon, gpsData.t);
+      std::cout << "[Enviado] Lat: " << gpsData.lat << " | Lon: " << gpsData.lon
+                << " | T: " << gpsData.t << "\n";
+    }
+  }
 
   return 0;
 }

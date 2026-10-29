@@ -1,11 +1,12 @@
 #include "network.h"
+#include <cerrno>
 #include <cstring>
+#include <iostream>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
 NetworkClient::NetworkClient(std::string ip, int p) {
-  struct sockaddr_in sv_addr;
   memset(&sv_addr, 0, sizeof(sv_addr));
   sv_addr.sin_family = AF_INET;
   sv_addr.sin_port = htons(p);
@@ -14,13 +15,10 @@ NetworkClient::NetworkClient(std::string ip, int p) {
   sockfd = socket(AF_INET, SOCK_DGRAM, 0);
   if (sockfd == -1) {
     active = false;
+    std::cerr << "[ERRO]: Erro ao criar socket: " << errno << std::endl;
     return;
   }
-
-  if (bind(sockfd, (struct sockaddr *)&sv_addr, sizeof(sv_addr)) == -1) {
-    active = false;
-    return;
-  }
+  active = true;
 }
 
 NetworkClient::~NetworkClient() {
@@ -31,41 +29,43 @@ NetworkClient::~NetworkClient() {
 bool NetworkClient::isActive() const { return active; }
 
 void NetworkClient::send_data(void *data, size_t n) {
+  std::cout << "[SEND]: " << active << std::endl;
   if (!active)
     return;
 
-  // erro na conexão
-  if (send(sockfd, data, n, 0) < 0) {
+  if (sendto(sockfd, data, n, 0, (sockaddr *)&sv_addr, sizeof(sv_addr)) < 0) {
     active = false;
   }
 }
 
 GpsNetClient::GpsNetClient(std::string s_ip, int p) : NetworkClient(s_ip, p) {}
 
-void GpsNetClient::sendGpsData(int lat, int lon, int t) {
+void GpsNetClient::sendGpsData(double lat, double lon, int t) {
   struct {
     char header[4];
-    int lat;
-    int lon;
-    int t;
-    int chksum;
+    int32_t lat;
+    int32_t lon;
+    int32_t t;
+    int32_t chksum;
   } buffer;
 
-  buffer.header[0] = htonl('R');
-  buffer.header[1] = htonl('A');
-  buffer.header[2] = htonl('T');
-  buffer.header[3] = htonl('O');
+  buffer.header[0] = 'R';
+  buffer.header[1] = 'A';
+  buffer.header[2] = 'T';
+  buffer.header[3] = 'O';
 
-  buffer.lat = htonl(lat);
-  buffer.lon = htonl(lon);
-  buffer.t = htonl(t);
+  buffer.lat = static_cast<int32_t>(lat * 10000000.0);
+  buffer.lon = static_cast<int32_t>(lon * 10000000.0);
+  buffer.t = static_cast<int32_t>(t);
+
   buffer.chksum = 0;
 
   uint8_t *buffer_bytes = (uint8_t *)&buffer;
-  for (int i = 0; i < sizeof(buffer) - sizeof(buffer.chksum); i++) {
+
+  size_t data_len = sizeof(buffer) - sizeof(buffer.chksum);
+  for (size_t i = 0; i < data_len; i++) {
     buffer.chksum += buffer_bytes[i];
   }
-  buffer.chksum = htonl(buffer.chksum);
 
   send_data(buffer_bytes, sizeof(buffer));
 }

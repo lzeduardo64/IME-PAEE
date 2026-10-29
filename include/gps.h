@@ -4,6 +4,12 @@
 #include <string>
 #include <vector>
 
+struct GpsPos {
+  double lat;
+  double lon;
+  int t;
+};
+
 /**
  * @class GpsReader
  * @brief Classe responsável pela leitura de dados NMEA a partir de arquivos ou
@@ -47,6 +53,9 @@ public:
    * do arquivo (EOF).
    */
   void start();
+
+  bool dataReady(void) const;
+  GpsPos getData(void);
 
 private:
   /**
@@ -130,7 +139,10 @@ private:
    */
   void parseGPGSV(const std::vector<std::string> &tokens);
 
+  bool ready;
   double lat;
+  double lon;
+  int time;
   FILE *f;
 };
 
