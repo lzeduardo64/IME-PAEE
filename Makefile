@@ -1,8 +1,17 @@
-build/GpsSensor: src/main.cpp src/gps.cpp 
-	@mkdir -p build
-	$(CXX) $^ -I include -lm -o $@
+CXXFLAGS := -Wall -Wextra -I include
+LDFLAGS := -lm
 
-.PHONY: clean docs
+all: build/GpsSensor
+
+build/%.o: src/%.cpp
+	@mkdir -p build
+	$(CXX) $(CXXFLAGS) -c $^ -o $@
+
+build/GpsSensor: build/main.o build/gps.o build/network.o
+	@mkdir -p build
+	$(CXX) $(LDFLAGS) $^ -o $@
+
+.PHONY: all clean docs
 
 clean:
 	@rm -rf build
