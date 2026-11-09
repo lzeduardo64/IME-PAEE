@@ -254,23 +254,6 @@ Comunicação **UDP** (IPv4) unidirecional: o kit envia, o computador recebe. Ca
 | Interface/receptor no computador exibindo as posições | ![interface-pc](term_sv.png) |
 | Sensor ligado ao kit | ![montagem](kit.jpg) |
 
-## Análise dos valores medidos
-
-> **Preencher** com os dados da coleta.
-
-Sugestão de conteúdo:
-
-- Local e condições da coleta (céu aberto, ambiente fechado, duração).
-- Tabela com amostras:
-
-| Amostra | Hora UTC | Latitude | Longitude | Sats | HDOP |
-|--------:|----------|----------|-----------|-----:|-----:|
-| 1 | | | | | |
-
-- Comparação com a posição de referência conhecida e estimativa do erro.
-- Dispersão das medidas com o receptor parado, discutindo o efeito do HDOP e do número de satélites.
-- Tempo até o primeiro fix e comportamento sem sinal.
-
 ## Documentação do código
 
 A documentação é gerada com Doxygen a partir dos comentários dos headers (`gps.h`, `network.h`) e de `main.cpp`:
