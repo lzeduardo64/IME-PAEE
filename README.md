@@ -248,13 +248,11 @@ Comunicação **UDP** (IPv4) unidirecional: o kit envia, o computador recebe. Ca
 
 ## Interface e evidências
 
-> **Preencher:** capturas de tela da interface do computador e do terminal do kit com o programa em funcionamento.
-
 | Evidência | Captura |
 |-----------|---------|
-| Terminal do kit com o programa rodando (`[GGA]`, `[Enviado]`) | `![terminal-kit](term_stm.png)` |
-| Interface/receptor no computador exibindo as posições | `![interface-pc](term_sv.png)` |
-| Sensor ligado ao kit | `![montagem](kit.jpg)` |
+| Terminal do kit com o programa rodando (`[GGA]`, `[Enviado]`) | ![terminal-kit](term_stm.png) |
+| Interface/receptor no computador exibindo as posições | ![interface-pc](term_sv.png) |
+| Sensor ligado ao kit | ![montagem](kit.jpg) |
 
 ## Análise dos valores medidos
 
