@@ -3,3 +3,6 @@ build
 *.core
 docs
 relatorios
+baixar_tiles.py
+*.csv
+*.db

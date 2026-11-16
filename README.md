@@ -561,39 +561,12 @@ Comunicação **UDP** (IPv4) unidirecional: o kit envia, o computador recebe (*f
 |-----------|---------|
 | Terminal do kit com o programa rodando (`[GGA]`, `[Enviado]`) | ![terminal-kit](imgs/term_stm.png) |
 | Terminal do servidor (mensagem "Escutando em … (UDP)") | ![terminal-servidor](imgs/term_sv.png) |
-| Interface completa do monitor com dados chegando (valor atual, mapa, gráficos, tabela) | ![interface-pc](docs/img/interface_completa.png) |
-| Janela de histórico em 30 s e em 60 s | ![historico](docs/img/historico_30_60s.png) |
-| **Alerta visual** (faixa vermelha, marcador vermelho, linha de limite no gráfico) | ![alerta](docs/img/alerta.png) |
-| **Limites de alerta desenhados no mapa** (retângulo vermelho) | ![limites-mapa](docs/img/limites_no_mapa.png) |
-| **Indicador de última atualização** em verde, laranja e vermelho ("SEM DADOS") | ![ultima-atualizacao](docs/img/ultima_atualizacao.png) |
-| Gravação em CSV (botão ativo e arquivo aberto no editor/planilha) | ![csv](docs/img/csv.png) |
-| Relatório exportado (`relatorios/relatorio_gps_*.txt`) | ![relatorio](docs/img/relatorio.png) |
+| Interface completa do monitor com dados chegando (valor atual, mapa, gráficos, tabela) | ![interface-pc](imgs/ui.png) |
 | Sensor ligado ao kit | ![montagem](kit.jpg) |
 
 ### Vídeo de demonstração
 
-<!-- Cole aqui o link do vídeo (YouTube/Drive) ou o arquivo em docs/video/ -->
-
-**Link do vídeo:** [](docs/video/video.mp4)
-
-> O vídeo deve mostrar: (1) o kit enviando no terminal; (2) o monitor recebendo e atualizando o valor atual e os gráficos; (3) um alerta sendo disparado ao sair dos limites; (4) a alteração dos limites em tempo real; (5) a gravação do CSV e o relatório gerado.
-
-## Análise dos valores medidos
-
-**Como as grandezas em metros são calculadas** (aproximação local):
-
-```
-desvio_N-S [m] = desvio_lat [°] × 111 320
-desvio_L-O [m] = desvio_lon [°] × 111 320 × cos(latitude_média)
-horizontal [m] = √(desvio_N-S² + desvio_L-O²)
-```
-
-### Gráficos
-
-<!-- Gráfico do histórico de lat/lon (captura da interface) e, se desejado, gráfico gerado a partir do CSV (matplotlib/planilha) -->
-![Histórico de latitude e longitude](docs/img/analise_historico.png)
-
-![Dispersão das posições (nuvem de pontos) a partir do CSV](docs/img/analise_dispersao.png)
+![Demonstração](imgs/output.gif)
 
 ## Documentação do código
 
